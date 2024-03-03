@@ -1,11 +1,19 @@
 const express = require("express");
 const fs = require("fs/promises");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "*",
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 const filePath = "data.json";
 
 // Check if the file exists, if not create an empty array
