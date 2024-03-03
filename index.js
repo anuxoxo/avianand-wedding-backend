@@ -1,6 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
-const fs = require("fs/promises");
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const FormData = require("./FormData"); // Import the FormData model
 const cors = require("cors");
 
 const app = express();
@@ -14,30 +17,33 @@ app.use(
     credentials: true,
   })
 );
-const filePath = "data.json";
 
-// Check if the file exists, if not create an empty array
-const initializeFile = async () => {
-  try {
-    await fs.access(filePath);
-  } catch (error) {
-    await fs.writeFile(filePath, "[]");
-  }
-};
-
-initializeFile();
+// MongoDB connection
+mongoose
+  .connect(process.env.DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 // API endpoint to handle form submissions
 app.post("/submit", async (req, res) => {
   try {
-    // Read existing data from the file
-    const data = JSON.parse(await fs.readFile(filePath));
+    // Create a new FormData document
+    const formData = new FormData({
+      fullName: req.body.fullName,
+      phoneNumber: req.body.phoneNumber,
+      emailAddress: req.body.emailAddress,
+      numberOfAdults: req.body.numberOfAdults,
+      numberOfKids: req.body.numberOfKids,
+      sharingRooms: req.body.sharingRooms,
+      foodPreference: req.body.foodPreference,
+      beveragePreference: req.body.beveragePreference,
+    });
 
-    // Append the new form data to the array
-    data.push(req.body);
-
-    // Write the updated data back to the file
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+    // Save the formData to the database
+    await formData.save();
 
     res.status(200).json({ message: "Form submitted successfully!" });
   } catch (error) {
