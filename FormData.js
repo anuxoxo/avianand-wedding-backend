@@ -7,7 +7,6 @@ const formDataSchema = new mongoose.Schema({
   emailAddress: { type: String, required: true },
   numberOfAdults: { type: Number, required: true },
   numberOfKids: { type: Number, required: true },
-  sharingRooms: { type: String, enum: ["yes", "no"], default: "yes" },
   foodPreference: { type: String, enum: ["veg", "nonveg"], default: "nonveg" },
   beveragePreference: {
     type: String,

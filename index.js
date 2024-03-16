@@ -37,7 +37,6 @@ app.post("/submit", async (req, res) => {
       emailAddress: req.body.emailAddress,
       numberOfAdults: req.body.numberOfAdults,
       numberOfKids: req.body.numberOfKids,
-      sharingRooms: req.body.sharingRooms,
       foodPreference: req.body.foodPreference,
       beveragePreference: req.body.beveragePreference,
     });
